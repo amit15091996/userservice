@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 		user.setUserId(randomUserId);
 		return userRepository.save(user);
 	}
-
+ 
 	@Override
 	public List<User> getAllUser() {
 
