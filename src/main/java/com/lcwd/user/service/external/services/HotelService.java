@@ -10,5 +10,6 @@ import com.lcwd.user.service.entity.Hotel;
 public interface HotelService {
 
 	@GetMapping("/hotels/{hotelId}")
-	 Hotel getHotel(@PathVariable("hotelId") String hotelId);
+	Hotel getHotel(@PathVariable("hotelId") String hotelId);
+
 }

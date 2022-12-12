@@ -1,16 +1,13 @@
 package com.lcwd.user.service.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private HotelService hotelService;
 
@@ -39,7 +36,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User saveUser(User user) {
 
-		// generate unique userid
+		// generate unique userId
+
 		String randomUserId = UUID.randomUUID().toString();
 		user.setUserId(randomUserId);
 		return userRepository.save(user);
@@ -55,11 +53,11 @@ public class UserServiceImpl implements UserService {
 	public User getUser(String userId) {
 		User user = userRepository.findById(userId).orElseThrow(
 				() -> new ResourceNotFoundException("User with given id not found on server !! : " + userId));
-		Rating[] ratingsOfUser = restTemplate
-				.getForObject("http://RATING-SERVICE/rating/users/" + user.getUserId(), Rating[].class);
-		
+		Rating[] ratingsOfUser = restTemplate.getForObject("http://RATING-SERVICE/rating/users/" + user.getUserId(),
+				Rating[].class);
+
 		List<Rating> ratings = Arrays.stream(ratingsOfUser).toList();
-		
+
 		logger.info("-----------------" + ratingsOfUser);
 
 		List<Rating> ratingList = ratings.stream().map(rating -> {
@@ -67,8 +65,6 @@ public class UserServiceImpl implements UserService {
 			// http://localhost:4040/hotels/cc80f4c3-0332-4d20-9636-a0716962269d
 
 //			ResponseEntity<Hotel> forEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class);
-			
-			
 
 			Hotel hotel = hotelService.getHotel(rating.getHotelId());
 
@@ -100,8 +96,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteUser(String userId) {
-		// TODO Auto-generated method stub
 
+		userRepository.deleteById(userId);
 	}
 
 }
